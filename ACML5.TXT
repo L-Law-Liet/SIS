@@ -1,0 +1,177 @@
+// #1
+class Solution {
+public:
+    void deleteNode(ListNode* node) {
+        node->val = node->next->val;
+        node->next = node->next->next;
+
+    }
+};
+
+// #2
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        ListNode* curr = head;
+        ListNode* prev = NULL;
+        while(curr){
+            ListNode* L = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = L;
+        }
+        return prev;
+    }
+};
+
+// #3
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+        if(!l2) return l1;
+        if(!l1) return l2;
+        if( l1->val < l2->val ) 
+        {
+            l1->next = mergeTwoLists(l1->next,l2);
+            return l1;
+        }
+        l2->next = mergeTwoLists(l1,l2->next);
+        return l2;
+    }
+};
+
+// #4
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+        set<ListNode*> s;
+        
+        while (head != NULL) {
+        if (s.find(head) != s.end()) {
+            return true;
+        } else {
+            s.insert(head);
+        }
+        
+        head = head->next;
+    }
+    return false;
+    }
+};
+
+// #5
+class Solution {
+public:
+    ListNode* partition(ListNode* head, int x) {
+        ListNode* l = new ListNode(1), * r = new ListNode(1);
+        ListNode* tl = l, * tr = r;
+        while (head != NULL) {
+            if (head->val < x) tl = tl->next = new ListNode(head->val);
+            else tr = tr->next = new ListNode(head->val);
+            head = head->next;
+        }
+        tl->next = r->next;
+        return l->next;
+    }
+};
+
+// #6
+class Solution {
+public:
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+    if(headA==NULL||headB==NULL)
+        return NULL;
+    ListNode *temp1 = headA, *temp2 = headB;
+    while(temp1 != temp2)
+    {
+        if(temp1 == NULL)
+            temp1 = headB;
+        else
+            temp1 = temp1->next;
+        if(temp2 == NULL)
+            temp2 = headA;
+        else
+            temp2 = temp2->next;
+        
+    }
+    return temp1;
+    }
+};
+
+// #7
+class Solution {
+public:
+    bool isPalindrome(ListNode* head) {
+        stack<int> st;
+        ListNode* slow = head;
+        ListNode* current = head;
+        while(slow != NULL)
+        {   
+            st.push(slow->val);
+            slow = slow->next;
+            
+        }
+        long long i = 0;
+        while(current != NULL && i < st.size()+1/2)
+        {
+            i++;
+            int x = st.top();
+            st.pop();
+            if(current->val != x)
+                return false;
+            current = current->next;
+        }
+        return true;
+    }
+};
+
+// #8
+class Solution {
+public:
+   ListNode* middle(ListNode* head){
+        if(head == NULL || head->next == NULL) 
+            return head;
+        if(head->next->next == NULL){
+            ListNode* temp = head->next;
+            head->next = NULL;
+            return temp;
+        }
+        ListNode *slow = head, *fast = head;
+        while(fast && fast->next){
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        ListNode* h2 = slow->next;
+        slow->next = NULL;
+        return h2;
+    }
+    
+    ListNode* merge(ListNode* h1, ListNode*h2){
+        if(!h1)
+            return h2;
+        if(!h2)
+            return h1;
+        ListNode* res = NULL;
+        if(h1->val <= h2->val){
+            res = h1;
+            res->next = merge(h1->next,h2);
+        }
+        else{
+            res = h2;
+            res->next = merge(h1, h2->next);
+        }
+        return res;
+    }
+    
+    ListNode* sortList(ListNode* head) {
+        if(head == NULL)
+            return NULL;
+        ListNode* h2 = middle(head);
+        if(h2 == head)
+            return head;
+        ListNode* head1 = sortList(head);
+        ListNode* head2 = sortList(h2);
+        ListNode* res = merge(head1, head2);
+        return res;
+    } 
+};

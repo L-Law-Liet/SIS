@@ -1,0 +1,312 @@
+// #1
+// Since the sumRange method will be called several times, I initially calculated the sum of all the
+// elements of the array up to the i-th element, and when the range is given, I simply subtract 
+// the smaller one from the larger element.
+class NumArray {
+    vector<int> L;
+public:
+    NumArray(vector<int>& nums) : L(nums.size()+1, 0) {
+        for(int i = 0; i < nums.size(); i++){
+            L[i+1] = nums[i]+L[i];
+        }
+    }
+    
+    int sumRange(int i, int j) {
+        return L[j+1] - L[i];
+    }
+};
+
+// #2
+// Here I just initialize 2 variables with the initial value of the zero element, since it is written that 
+// the array will have at least 1 element and then I go through the loop comparing each subsequent element,
+// plus it to the current element with the current element itself, which of them is more than that, and take L.
+// I write the maximum value from the sums of all subarrays to the Max variable.
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        int L = nums[0];
+        int Max = nums[0];
+        for(int i = 1; i < nums.size(); i++){
+            L = max(nums[i]+ L, nums[i]);
+            Max = max(Max, L);
+        }
+        return Max;
+    }
+};
+
+// #3
+// It is possible to find the product of all elements of an array except itself using two non-nested loops.
+// In the first loop, we will multiply all their previous elements, then the last element will have the correct value,
+// but the first will not have the multiplied element since it is the very first. To do this, we go back through the array,
+// from the last element to the first, then the first element will have the value of the product of all its previous elements.
+class Solution {
+public:
+    vector<int> productExceptSelf(vector<int>& nums) {
+        vector<int> arr(nums.size(), 1);
+        for(int i = 1; i < nums.size(); i++){  
+            arr[i] = arr[i-1]*nums[i-1];
+        }
+        int L = 1;
+        for(int i = nums.size()-2; i >= 0; i--){
+            L *= nums[i+1];
+            arr[i] *= L;
+        }
+        return arr;
+    }
+};
+
+//#4
+// You can find the missing element without division, just add the indices of this array to the new variable,
+// and in my case, it is just the first element of the array, we add all the elements of the array, and at the end
+// we subtract the sum of the elements from the sums of the indices.
+class Solution {
+public:
+    int missingNumber(vector<int>& nums) {
+        int n = nums.size();
+        for(int i = 1; i < nums.size(); i++){
+            n += i;
+            nums[0] += nums[i];
+        }
+        
+        return n - nums[0];
+    }
+};
+
+//#5
+//To find the maximum average in the array, I first took the sum from the first element to the k-th element,
+// and then went through the loop to the end, and in each iteration, I wrote the next element of the array to
+// the variable next, subtracting the very first one. and in the variable L chose the largest of L and next.
+class Solution {
+public:
+    double findMaxAverage(vector<int>& nums, int k) {
+        int L = 0;
+        for(int i = 0; i < k; i++){
+            L += nums[i];
+        }
+        int next = L/1;
+        for(int i = k; i < nums.size(); i++){
+            next += nums[i]-nums[i-k];
+            L = max(L, next);
+        }
+        return L*1.0/k;
+    }
+};
+
+//#6
+// To find the sum of the region of the matrix, I created a new matrix whose size is 1 larger than that of this one,
+// and filled it with the sum of the previous ones as in 1 task, since here the sumRegion method is also called several times.
+// But unlike the first task, here the cell sum is taken as the value of the matrix element in the same position
+// (taking into account that the new one has 1 size larger) + the element whose j-th element is 1 less + the element
+// whose i-th element is less by 1 - the element of the new matrix which is diagonally 1 higher.
+// And when finding the sum of the region, subtract everything that is higher from our cell and everything that is to 
+// the left and add the cell that is higher diagonally from our matrix, since this value is subtracted twice when subtracted.
+class NumMatrix {
+    vector<vector<int>> V;
+public:
+    NumMatrix(vector<vector<int>>& matrix){
+        int r = 0;
+        int c = 0;
+        if(matrix.size() != 0){
+            r = matrix.size()+1;
+            c = matrix[0].size()+1;
+        }
+         vector<vector<int>> L(r , vector<int> (c));
+        for (int i = 1; i < L.size(); i++){
+            for(int j = 1; j < L[0].size(); j++){
+                L[i][j] = L[i][j-1]+L[i-1][j]+matrix[i-1][j-1]-L[i-1][j-1];
+            }
+        }
+        V = L;
+    }
+    
+    int sumRegion(int row1, int col1, int row2, int col2) {
+     
+        return V[row2+1][col2+1] - V[row1][col2+1] - V[row2+1][col1] + V[row1][col1];
+    }
+};
+
+//#7
+// To rotate the matrix, I first swapped each element with the diagonal opposite in the first cycle 
+// (change the i and j elements in places) and in the second cycle swapped them in the center relative to the y-axis
+// (here the i-th element remains in place, we change the j-th element with j-th element starting from the end.
+class Solution {
+public:
+    void rotate(vector<vector<int>>& matrix) {
+        for(int i = 0; i < matrix.size(); i++){
+            for(int j = i; j < matrix.size(); j++){
+                swap(matrix[i][j], matrix[j][i]);
+            }
+        }
+        for(int i = 0; i < matrix.size(); i++){
+            for(int j = 0; j <= matrix.size()/2; j++){
+                swap(matrix[i][j], matrix[i][matrix.size()-j-1]);
+            }
+        }
+        
+    }
+};
+
+//#8
+// To display words in a sentence in reverse order, I divided the string by spaces and wrote each element starting
+// from the end into a new string
+class Solution {
+    public String reverseWords(String s) {
+        String[] arr = s.split(" ");
+        String L = "";
+        for(int i = arr.length-1; i >= 0; i--){
+            L += arr[i];
+            L = L.trim();
+            L += " ";
+        }
+        return L.trim();
+    }
+}
+
+//#9
+// To format the license key, I looped through the string in reverse order and did not write the "-" values into a new string,
+// and each time incremented one variable by 1, and when this variable reached the value K, I added "-" to the string,
+// since the format there should be K values - K values - ....
+// At the end, I removed the extra "-" and brought the entire string to the upper case, displaying it in the reverse order.
+class Solution {
+    public String licenseKeyFormatting(String S, int K) {
+        
+            int L = 0;
+        String a = "";
+        for(int i = S.length()-1; i >= 0; i--){
+            if(S.charAt(i) != '-'){
+                L++;
+                a += S.charAt(i);
+            }
+            if(L == K){
+                L = 0;
+                a += "-";
+            }
+        }	
+        if(a.length() < 1){
+            return "";
+        }
+        else{
+            if(a.charAt(a.length()-1) == '-'){
+        a = a.substring(0, a.length() - 1);
+        }
+        return new StringBuilder(a.toUpperCase()).reverse().toString();
+        }
+    }
+}
+
+//#10
+// First, I immediately removed all the extra spaces, then I checked if there were no digits, then immediately 0.
+// If the string starts with the + or - symbol, then the cycle starts from the second element and until a NOT digit
+// is encountered, the cycle will continue and at the end the string will be converted to an integer. If the int value
+// is exceeded, then I throw an exception in the catch block, I process if it starts with - then the minimum integer value,
+// otherwise the maximum value. if not a digit falls out before reaching the end of the cycle, then again I do all these
+// operations only add another check to see if there is at least some value in the string, if not, then I return 0.
+class Solution {
+    public int myAtoi(String str) {
+        str = str.trim();
+        if(str.equals("") || str.equals("-") | str.equals("+")){
+            return 0;
+        }
+        String s = "";
+        int n = 0;
+        if(str.charAt(0) == '-' || str.charAt(0) == '+'){
+            n = 1;
+            s += str.charAt(0);
+        }
+        for(int i = n; i < str.length(); i++){
+            if(str.charAt(i) < '0' || str.charAt(i) > '9'){
+                try {Integer.parseInt(s);} 
+                catch(NumberFormatException ex) {
+                    if(s.equals("") || s.equals("-") | s.equals("+")){
+                        return 0;
+                    }
+                    if(s.charAt(0) == '-'){
+                        return Integer.MIN_VALUE;
+                    }
+                    else{
+                        return Integer.MAX_VALUE;  
+                    }
+                }
+            return Integer.parseInt(s);
+            }
+            s += str.charAt(i);
+        }
+        try {Integer.parseInt(s);}
+        catch(NumberFormatException ex) {
+            if(s.equals("") || s.equals("-") | s.equals("+")){
+                return 0;
+            }
+            if(s.charAt(0) == '-'){
+                return Integer.MIN_VALUE;
+            }
+            else{
+                return Integer.MAX_VALUE;  
+            }
+        }
+        return Integer.parseInt(s);
+    }
+}
+
+// #11
+// In this task, we divide the number until it is equal to zero, and substitute the corresponding words from the
+// previously created constant value into the string and display it at the end.
+class Solution {
+    private final String[] THOUSANDS = {"", "Thousand", "Million", "Billion"};
+    
+    private final String[] LESS_THAN_TWENTY = {"", "One", "Two", "Three", "Four", "Five", 
+    "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen",
+     "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"};
+    
+    private final String[] TENS = {"", "", "Twenty", "Thirty", "Forty", "Fifty",
+     "Sixty", "Seventy", "Eighty", "Ninety"};
+    
+    
+    public String numberToWords(int num) {
+         if (num == 0) return "Zero";
+        StringBuilder sb = new StringBuilder();
+        int index = 0;
+        while (num > 0) {
+            if (num % 1000 > 0) {
+                StringBuilder tmp = new StringBuilder();
+                helper(tmp, num % 1000);
+                tmp.append(THOUSANDS[index]).append(" ");
+                sb.insert(0, tmp);
+            }
+            index++;
+            num = num / 1000;
+        }
+        return sb.toString().trim();
+    }
+    
+    private void helper(StringBuilder tmp, int num) {
+        if (num == 0) {
+            return;
+        } else if (num < 20) {
+            tmp.append(LESS_THAN_TWENTY[num]).append(" ");
+            return;
+        } else if (num < 100) {
+            tmp.append(TENS[num / 10]).append(" ");
+            helper(tmp, num % 10);
+        } else {
+            tmp.append(LESS_THAN_TWENTY[num / 100]).append(" Hundred ");
+            helper(tmp, num % 100);
+        }
+    }
+}
+
+//#12
+// Here we divide the string by spaces and go through the nested loop over each word and rewrite it in reverse order.
+class Solution {
+    public String reverseWords(String s) {
+        String[] str = s.split(" ");
+        
+        String L = "";
+        for(int i = 0; i < str.length; i++){
+            for(int j = str[i].length()-1; j >=0; j--){
+                L += str[i].charAt(j);
+            }
+            L += " ";
+        }
+        return L.trim();
+    }
+}

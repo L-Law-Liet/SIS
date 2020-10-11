@@ -1,0 +1,277 @@
+// #1
+class Solution {
+public:
+    bool containsDuplicate(vector<int>& nums) {
+        set<int> L;
+        for(auto i : nums){
+            L.insert(i);
+        }
+        return L.size() != nums.size();
+    }
+};
+
+// #2
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+
+        for(int i = 0; i < nums.size(); i++){
+            for(int j = 0; j < nums.size(); j++){
+                if(j == i){
+                    continue;
+                }
+                if(nums[i]+nums[j] == target){
+                    vector<int> L{i, j};
+                    return L;
+                }
+            }
+        }
+    return nums;
+    }
+};
+
+// #3
+class Solution {
+public:
+    vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
+        set<int> s1;
+        for(int& x: nums1){
+            s1.insert(x);
+        }
+        
+        set<int> res;
+        for(int& x: nums2){
+            if(s1.count(x))
+                res.insert(x);
+        }
+        int n = res.size();
+        vector<int> v(n);
+        int i = 0;
+        for(int x: res){
+            v[i++] = x;
+        }
+        
+        return v;
+        
+    }
+};
+
+// #4
+class Solution {
+public:
+    vector<vector<string>> groupAnagrams(vector<string>& strs) {
+        vector<vector<string>> L;
+        multimap<string, string> m;
+        for(int i = 0; i < strs.size(); i++){
+            string temp = strs[i];
+            sort(temp.begin(), temp.end());
+            m.emplace(temp, strs[i]);
+        }
+        set <string> checkerSet;
+        for(auto i : m){
+            if(checkerSet.insert(i.first).second){
+            auto ret = m.equal_range(i.first);
+                vector<string> N;
+            for(auto j = ret.first; j != ret.second; j++){
+                N.push_back(j->second);
+            }
+            
+            L.push_back(N);
+        }
+                
+        }
+        return L;
+    }
+};
+
+// #5
+class Solution {
+    public boolean wordPattern(String pattern, String s) {
+        String[] arr = s.split(" ");
+        if(arr.length != pattern.length()){
+            return false;
+        }
+        Map<Character, String> m = new HashMap<Character, String>();
+        m.put(pattern.charAt(0), arr[0]);
+        for(int i = 1; i < pattern.length() && i < arr.length; i++){
+            if( (m.containsKey(pattern.charAt(i)) && m.get(pattern.charAt(i)).equals(arr[i])) ||
+              (!m.containsKey(pattern.charAt(i)) && !m.containsValue(arr[i])) ){
+                m.put(pattern.charAt(i), arr[i]);
+            }
+            else{
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
+// #6
+class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        Arrays.sort(nums);
+        Set<List<Integer>> L = new HashSet<List<Integer>>();
+        int n = nums.length;
+        for(int i = 0; i < n-2; i++){
+            if(i == 0 || (i > 0 && nums[i] != nums[i-1])){
+                int s = i+1;
+                int t = n-1;
+                 while(s < t){
+                     if(nums[i]+nums[s]+nums[t] == 0){
+                        L.add(Arrays.asList(nums[i], nums[s], nums[t]));
+                        t--;
+                        s++;
+                     }
+                     else if(nums[i]+nums[s]+nums[t] > 0){
+                         t--;
+                     }
+                     else{
+                         s++;
+                     }
+                 }
+            }
+        }
+        List<List<Integer>> N = new LinkedList();
+        for (List<Integer> e : L)
+		N.add(e);
+        return N;
+    }
+}
+
+// #7
+class Solution {
+public:
+    bool containsNearbyDuplicate(vector<int>& nums, int k) {
+        map<int,int> m;
+        for(int i=0; i<nums.size();i++){
+            if(m.find(nums[i]) == m.end()) m[nums[i]] =i;
+            else {
+                if (i - m[nums[i]] <= k) return true;
+                else m[nums[i]] = i;
+            }
+        }
+        return false;
+    }
+};
+
+// #8
+class Solution {
+    int[] arr;
+    Random r;
+    public Solution(int[] nums) {
+        arr = nums;
+        r = new Random();
+    }
+    
+    public int pick(int target) {
+        int n = 0;
+        int res = 0;
+        for(int i = 0; i < arr.length; i++){
+            if(arr[i] == target){
+                n++;
+                
+                if(r.nextInt(n) == 0){
+                    res = i;
+                }
+            }
+        }
+        return res;
+    }
+}
+
+// #9
+class Solution {
+public:
+    int subarraySum(vector<int>& nums, int k) {
+        unordered_map <int, int> preSum2Count;
+        int ans = 0;
+        int preSum = 0;
+        preSum2Count[preSum] = 1;
+        for(auto val : nums){
+            preSum += val;
+            ans += preSum2Count[preSum-k];
+            preSum2Count[preSum]++;
+        }
+        return ans;
+    }
+};
+
+// #10
+class Solution {
+public:
+    int fourSumCount(vector<int>& A, vector<int>& B, vector<int>& C, vector<int>& D) {
+        unordered_map<int, int> m;
+        for(auto a : A){
+            for(auto b : B){
+                m[a+b]++;
+            }
+        }
+        int ans = 0;
+        for(auto c : C){
+            for(auto d : D){
+                int sum = c+d;
+                auto it = m.find(-sum);
+                if(it != m.end()){
+                    ans += it->second;
+                }
+            }
+        }
+        return ans;
+    }
+};
+
+// #11
+class Solution {
+public:
+    bool isHappy(int n) {
+        map<int, int> m;
+        int val = 0;
+        while(n != 1){
+            int k = n;
+            while(n != 0){
+                val += pow(n%10, 2);
+                n /= 10;
+            }
+            if(m.find(val) != m.end()){
+                return false;
+            }
+            m[k] = val;
+            n = val; 
+            val = 0;
+        }
+        return true;
+    }
+};
+
+// #12
+class Solution {
+    struct Pair {
+        int count;
+        int key;
+    };
+public:
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        map<int, int> m;
+        for(auto i : nums){
+            m[i]++;
+        }
+        vector<Pair> amountKeys;
+        for(auto k : m){
+            amountKeys.push_back(Pair{k.second, k.first});
+        }
+        nth_element(
+        amountKeys.begin(),
+        amountKeys.begin()+k,
+        amountKeys.end(),
+            [](Pair &left, Pair &right) {
+                return left.count > right.count;
+            }
+        );
+        vector<int> ans(k);
+        for(int i = 0; i < k; i++){
+            ans[i] = amountKeys[i].key;
+        }
+        return ans;
+        
+    }
+};

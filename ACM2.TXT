@@ -1,0 +1,285 @@
+// #1
+// Time: O(n)
+// Space: O(1)
+class Solution 
+{
+    public:
+    string sortString(string s){
+        char ch=true;
+        int i,count[26]={0};
+        string s1;
+        for(i=0;i<s.size();i++)
+            count[s[i]-'a']++;
+        for(i=0;i<26;){
+            if(count[i]>0){
+                s1.push_back(i+'a');
+                    count[i]--;
+            }
+            if(ch==true)
+                i++;
+            else
+                i--;
+            if(i==26){
+                ch=false;
+                i--;       
+            }
+            else if(i==-1){
+                ch=true;
+                i++;
+            }
+            if(s1.size()==s.size())
+                break;
+            }
+            return s1;
+    }
+};
+
+// #2
+// Time: O(nlogn)
+// Space: O(1)
+class Solution {
+public:
+    double average(vector<int>& salary) {
+        
+        float L = 0;
+        sort(salary.begin(),salary.end());
+        for(int i = 1; i < salary.size()-1; i++){
+            L += salary[i];
+        }
+        return L/((salary.size()-2)*1.0);
+        
+    }
+};
+
+// #3
+// Time: O(nm2)
+// Space: O(1)
+class Solution {
+public:
+    vector<int> relativeSortArray(vector<int>& arr1, vector<int>& arr2) {
+        sort(arr1.begin(), arr1.end());
+        int c = 0;
+        for(int i = 0; i < arr2.size(); i++){
+            for(int j = c; j < arr1.size(); j++){
+                for(int k = j; k < arr1.size(); k++){
+                    if(arr1[k] == arr2[i]){
+                        swap(arr1[j], arr1[k]);
+                        j++;
+                    }
+                }
+                c = j;
+                break;
+            }
+        }
+        sort(arr1.begin() + c, arr1.end());
+        return arr1;
+    }
+};
+
+// #4
+// Time: O(n2mlogn)
+// Space: O(mn)
+class Solution {
+public:
+    vector<vector<int>> diagonalSort(vector<vector<int>>& mat) {
+        int m = mat.size(), n = mat[0].size();
+		
+        if (m == 1) {
+            return mat;
+        }
+		
+        for (int k = 0; k < m; k++) {
+            vector<int> B;
+            int i = k, j = 0;
+			
+            while (i < m && j < n) {
+                B.push_back(mat[i][j]);
+                i = i + 1;
+                j = j + 1;
+            }
+			
+            sort(B.begin(),B.end());
+			
+            i = k, j = 0;
+			
+            int x = 0;
+            
+			while (i < m && j < n) {
+                mat[i][j] = B[x];
+                i = i + 1;
+                j = j + 1;
+                x = x + 1;
+            }
+			
+        }
+		
+        for (int k = 1; k < n; k++) {
+            vector<int> B;
+			
+            int j = k, i = 0;
+            
+			while (j < n && i < m) {
+                B.push_back(mat[i][j]);
+                i = i + 1;
+                j = j + 1;
+            }
+            
+			sort(B.begin(),B.end());
+            
+			j = k, i = 0;
+            
+			int x = 0;
+            
+			while (j < n && i < m) {
+                mat[i][j] = B[x];
+                i = i + 1;
+                j = j + 1;
+                x = x + 1;
+            }
+			
+        }
+        
+		return mat; 
+    }
+};
+
+// #5
+// Time: O(nlogn+n)
+// Space: O(1)
+class Solution {
+public:
+    int maxCoins(vector<int>& piles) {
+        sort(piles.begin() , piles.end());
+        int a = 0;
+        int sum = 0;
+        for(int i = piles.size() - 2; a < piles.size(); i -= 2){
+            sum += piles[i];
+            a += 3;
+        }
+        return sum;
+    }
+};
+
+// #6
+// Time: O(nlogn)
+// Space: O(n)
+class Solution {
+public:
+    int getKth(int lo, int hi, int k) {
+     	vector<pair<int, int>> ans;
+        for(int i = lo; i <= hi; i++)
+        {
+            int count = 0;
+            int a = i;
+            while(a != 1)
+            {
+                if(a%2 == 0)
+                	a /= 2;
+                else a = 3*a+1;
+                count++;
+            }
+            ans.push_back(make_pair(count, i)); 
+        }
+        std::nth_element(ans.begin(), ans.begin() + k - 1, ans.end());
+        return ans[k - 1].second;   
+    }
+};
+
+// #7
+// Time: O(n+nlogn)
+// Space: O(1)
+class Solution {
+public:
+    int largestPerimeter(vector<int>& A) {
+           sort(A.begin(), A.end());
+        for(int i = A.size() - 1; i >= 2; i--) {
+            if(A[i] < A[i-1] + A[i-2]) return A[i] + A[i-1] + A[i-2];
+        }
+        return 0;
+    }
+};
+
+// #8
+// Time: O(n+m)
+// Space: O(n+m)
+class Solution {
+public:
+    vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
+        set<int> s1;
+        for(int& x: nums1){
+            s1.insert(x);
+        }
+        
+        set<int> res;
+        for(int& x: nums2){
+            if(s1.count(x))
+                res.insert(x);
+        }
+        int n = res.size();
+        vector<int> v(n);
+        int i = 0;
+        for(int x: res){
+            v[i++] = x;
+        }
+        
+        return v;
+        
+    }
+};
+
+// #9
+// Time: O(nlogn+n+k)
+// Space: O(n+k)
+class Solution {
+public:
+    vector<vector<int>> kClosest(vector<vector<int>>& points, int K) {
+    vector<pair<int, double>> squares(points.size());
+  	for(int i=0; i<points.size(); ++i){
+    	squares[i].first = i;
+    	squares[i].second = points[i][0]*points[i][0] + points[i][1]*points[i][1];
+    }
+  	sort(squares.begin(), squares.end(), [](pair<int, double> a, pair<int, double> b){
+    	return a.second < b.second;
+ });
+  vector<vector<int>> closests(K, vector<int>(2));
+  for(int i=0; i<K; ++i) 
+  	closests[i] = points[squares[i].first];
+  return closests;
+    }
+};
+
+// #10
+// Time: O(nlogn+n)
+// Space: O(1)
+class Solution {
+    static bool foo(int j ,int k)
+    {
+        string a = to_string(j);
+        string b = to_string(k);
+        string ab=a+b;
+        string ba=b+a;
+        if(ab>ba)
+        {
+            return true;
+        }
+        return false;
+    }
+    
+   public:
+    string largestNumber(vector<int>& nums) {       
+        
+        sort(nums.begin(),nums.end(),foo);
+        if(count(nums.begin(),nums.end(),0)==nums.size())
+        {
+            return "0";
+        }
+        
+        string ans="";
+        for(int v=0;v<nums.size();v++)
+        {
+            ans=ans+to_string(nums[v]);
+        }
+        
+  return ans;      
+    }
+};
